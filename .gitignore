@@ -23,7 +23,6 @@
 *.hex
 
 # dir
-bin
 obj
 
 src/csv.c
