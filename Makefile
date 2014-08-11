@@ -1,10 +1,14 @@
 CC = gcc
-DEFINES += -D__TEST__
+CXX = g++
+AR = ar
+
+DEFINES +=
 CFLAGS = $(DEFINES) -c -O2 -Wall
 INCLUDES +=
 LIBS +=
 LDFLAGS +=
-LINKCMD = $(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(LIBS)
+#LINKCMD = $(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(LIBS)
+LINKCMD = $(AR) -rcs $(TARGET) $(OBJECTS)
 
 RAGEL = ragel
 RAGELFLAGS = -C -G2
@@ -13,7 +17,7 @@ RAGELFLAGS = -C -G2
 
 TARGETDIR = bin
 OBJDIR = obj
-TARGET = $(TARGETDIR)/csv
+TARGET = $(TARGETDIR)/libcsv.a
 
 all: $(TARGETDIR) $(OBJDIR) $(TARGET)
 	@:
@@ -24,7 +28,9 @@ clean:
 	rm src/csv.c
 
 test:
-	$(TARGET) $(TARGETDIR)/header.csv
+	$(MAKE)
+	$(CC) -o $(TARGETDIR)/test test/test.c -Isrc $(TARGET)
+	$(TARGETDIR)/test $(TARGETDIR)/header.csv
 
 $(TARGETDIR):
 	mkdir $(subst /,\\,$(TARGETDIR))
@@ -43,4 +49,5 @@ src/csv.c: src/csv.rl
 
 $(OBJDIR)/csv.o: src/csv.c
 	$(CC) -o "$@" $(CFLAGS) $(INCLUDES) "$<"
+
 
