@@ -23,7 +23,7 @@ struct scanner {
     int curline;
     char *data;
     int len;
-    char buf[BUFSIZE];
+    char cache[BUFSIZE];
 
 	union {
 		FILE *file;
@@ -31,7 +31,7 @@ struct scanner {
 			const char *buf;
 			size_t len;
 			size_t pos;
-		} buf;
+		} str;
 	} u;
 
 	int (*do_read)(struct scanner *s, int space);
@@ -44,9 +44,9 @@ static int csv_file_read(struct scanner *s, int space)
 
 static int csv_buf_read(struct scanner *s, int space)
 {
-    if (s->u.buf.pos < s->u.buf.len) {
-        memcpy(s->p, &s->u.buf.buf[s->u.buf.pos], space);
-        s->u.buf.pos += space;
+    if (s->u.str.pos < s->u.str.len) {
+        memcpy(s->p, &s->u.str.buf[s->u.str.pos], space);
+        s->u.str.pos += space;
         return space;
     }
     printf("EOF: %d\n", EOF);
@@ -119,12 +119,12 @@ check_buf(struct scanner *s)
             have = 0;
         } else {
             have = s->pe - s->ts;
-            memmove(s->buf, s->ts, have);
-            s->te -= (s->ts - s->buf);
-            s->ts = s->buf;
+            memmove(s->cache, s->ts, have);
+            s->te -= (s->ts - s->cache);
+            s->ts = s->cache;
         }
 
-        s->p = s->buf + have;
+        s->p = s->cache + have;
         space = BUFSIZE - have;
 
         if (space == 0) {
@@ -222,8 +222,8 @@ csv_read_buf(csv_fn_t fn, const char *buf, size_t len)
 {
     struct scanner s;
     scan_init(&s);
-    s.u.buf.buf = buf;
-    s.u.buf.len = len;
+    s.u.str.buf = buf;
+    s.u.str.len = len;
     s.do_read = csv_buf_read;
     csv_read(&s, fn);
 }
