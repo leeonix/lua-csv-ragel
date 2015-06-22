@@ -25,31 +25,34 @@ struct scanner {
     int len;
     char cache[BUFSIZE];
 
-	union {
-		FILE *file;
-		struct csv_buf {
-			const char *buf;
-			size_t len;
-			size_t pos;
-		} str;
-	} u;
+    union {
+        FILE *file;
+        struct csv_strbuf {
+            const char *buf;
+            size_t len;
+            size_t pos;
+        } str;
+    } u;
 
-	int (*do_read)(struct scanner *s, int space);
+    int (*do_read)(struct scanner *s, size_t space);
 };
 
-static int csv_file_read(struct scanner *s, int space)
+static int csv_file_read(struct scanner *s, size_t space)
 {
     return fread(s->p, 1, space, s->u.file);
 }
 
-static int csv_buf_read(struct scanner *s, int space)
+static int csv_buf_read(struct scanner *s, size_t space)
 {
-    if (s->u.str.pos < s->u.str.len) {
+    size_t left = s->u.str.len - s->u.str.pos;
+    if (left > 0) {
+        if (space > left) {
+            space = left;
+        }
         memcpy(s->p, &s->u.str.buf[s->u.str.pos], space);
         s->u.str.pos += space;
         return space;
     }
-    printf("EOF: %d\n", EOF);
     return EOF;
 }
 
@@ -112,7 +115,7 @@ scan_init(struct scanner *s)
 static int
 check_buf(struct scanner *s)
 {
-    int have, space, readlen;
+    size_t have, space, readlen;
 
     if (s->p == s->pe) {
         if (s->ts == 0) {

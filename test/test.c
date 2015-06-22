@@ -38,17 +38,21 @@ static void
 read_buf(FILE *f)
 {
     char *buf;
-    size_t len;
+    size_t len, num;
 
     fseek(f, 0, SEEK_END);
     len = ftell(f);
     fprintf(stderr, "len: %d\n", (int)len);
     fseek(f, 0, SEEK_SET);
     buf = malloc(len + 1);
-    memset(buf, 0, len + 1);
-    len = fread(buf, len, 1, f);
-
-    csv_read_buf(read_csv_file, buf, len);
+    num = fread(buf, 1, len, f);
+    if (num > 0) {
+        fprintf(stderr, "num: %d\n", (int)num);
+        buf[num] = '\0';
+        csv_read_buf(read_csv_file, buf, len);
+    } else {
+        fprintf(stderr, "error read file");
+    }
     free(buf);
 }
 
@@ -66,7 +70,9 @@ int
 main(int argc, char *argv[])
 {
     if (argc > 1) {
+        printf("----------------------------------------\ncsv_read_file\n");
         csv_read_file(read_csv_file, argv[1]);
+        printf("------------------------------------------\ncsv_read_buf\n");
         read_file_buf(argv[1]);
     } else {
         csv_fread(read_csv_file, stdin);
