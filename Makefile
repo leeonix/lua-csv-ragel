@@ -1,5 +1,4 @@
 CC = gcc
-CXX = g++
 AR = ar
 
 DEFINES +=
@@ -7,17 +6,17 @@ CFLAGS = $(DEFINES) -c -O2 -Wall
 INCLUDES +=
 LIBS +=
 LDFLAGS +=
-#LINKCMD = $(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(LIBS)
 LINKCMD = $(AR) -rcs $(TARGET) $(OBJECTS)
 
 RAGEL = ragel
-RAGELFLAGS = -C -G2
+RAGELFLAGS = -C -T1
 
 .PHONY: clean test
 
 TARGETDIR = bin
 OBJDIR = obj
 TARGET = $(TARGETDIR)/libcsv.a
+TEST = $(TARGETDIR)/test.exe
 
 all: $(TARGETDIR) $(OBJDIR) $(TARGET)
 	@:
@@ -29,8 +28,8 @@ clean:
 
 test:
 	$(MAKE)
-	$(CC) -o $(TARGETDIR)/test test/test.c -Isrc $(TARGET)
-	$(TARGETDIR)/test $(TARGETDIR)/header.csv
+	$(CC) -o "$(TEST)" test/test.c -Isrc $(TARGET)
+	$(TEST) $(TARGETDIR)/header.csv
 
 $(TARGETDIR):
 	mkdir $(subst /,\\,$(TARGETDIR))

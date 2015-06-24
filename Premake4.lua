@@ -25,14 +25,15 @@ project 'csv'
     kind 'StaticLib'
 
     files {
-        'src/*.h',
-        'src/*.c',
+        'src/csv.h',
+        'src/csv.c',
+        'src/csv.rl',
     }
 
     prebuildcommands
     {
         '@echo on',
-        "ragel -G2 ../src/csv.rl",
+        "ragel -C -T1 ../src/csv.rl",
     }
 
 project 'test'
@@ -46,7 +47,7 @@ project 'test'
     }
 
     files {
-        'test/*.c',
+        'test/test.c',
     }
 
     configuration 'Debug'
