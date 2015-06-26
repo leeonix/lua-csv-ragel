@@ -3,7 +3,7 @@ solution 'csv'
     configurations { 'Debug', 'Release' }
     language 'C'
     defines { 'WIN32', '_WINDOWS' }
-    flags { 'StaticRuntime' }
+    flags { 'StaticRuntime', 'NoManifest', }
 
     location 'build'
     targetdir 'bin'
@@ -13,13 +13,14 @@ solution 'csv'
         defines { '_CRT_SECURE_NO_WARNINGS' }
 
     configuration 'Debug'
-        flags { 'Symbols' }
         defines { '_DEBUG' }
+        flags { 'Symbols' }
+        optimize 'Debug'
         targetsuffix '_d'
 
     configuration 'Release'
-        flags { 'Optimize' }
         defines { 'NDEBUG' }
+        optimize 'Full'
 
 project 'csv'
     kind 'StaticLib'
@@ -30,8 +31,7 @@ project 'csv'
         'src/csv.rl',
     }
 
-    prebuildcommands
-    {
+    prebuildcommands {
         '@echo on',
         "ragel -C -T1 ../src/csv.rl",
     }
