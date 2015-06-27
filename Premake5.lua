@@ -9,16 +9,16 @@ solution 'csv'
     targetdir 'bin'
     objdir 'obj'
 
-    configuration 'vs*'
+    filter { 'configurations:vs*' }
         defines { '_CRT_SECURE_NO_WARNINGS' }
 
-    configuration 'Debug'
+    filter { 'configurations:Debug' }
         defines { '_DEBUG' }
         flags { 'Symbols' }
         optimize 'Debug'
         targetsuffix '_d'
 
-    configuration 'Release'
+    filter { 'configurations:Release' }
         defines { 'NDEBUG' }
         optimize 'Full'
 
