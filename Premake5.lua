@@ -27,14 +27,16 @@ project 'csv'
 
     files {
         'src/csv.h',
-        'src/csv.c',
         'src/csv.rl',
     }
 
-    prebuildcommands {
-        '@echo on',
-        "ragel -C -T1 ../src/csv.rl",
-    }
+    rules { 'ragel' }
+
+    print(externalrule)
+    externalrule 'ragel'
+        location 'ragel'
+        filename 'ragel'
+        fileextension '.rl'
 
 project 'test'
     kind 'ConsoleApp'
