@@ -9,7 +9,7 @@ solution 'csv'
     targetdir 'bin'
     objdir 'obj'
 
-    filter { 'configurations:vs*' }
+    filter { 'action:vs*' }
         defines { '_CRT_SECURE_NO_WARNINGS' }
 
     filter { 'configurations:Debug' }
@@ -24,6 +24,10 @@ solution 'csv'
 
 project 'csv'
     kind 'StaticLib'
+
+    includedirs {
+        'src',
+    }
 
     files {
         'src/csv.h',
