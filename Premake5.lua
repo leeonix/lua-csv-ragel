@@ -35,12 +35,20 @@ project 'csv'
     }
 
     rules { 'ragel' }
-
-    print(externalrule)
     externalrule 'ragel'
         location 'ragel'
         filename 'ragel'
         fileextension '.rl'
+        propertydefinition {
+            name  = "OutputFileName",
+            kind  = "string",
+--            value = 'src\\%(Filename).c',
+        }
+
+--    filter { 'configurations:Release' }
+--        ragelVars {
+--            OutputFileName = 'src\\%(Filename).c',
+--        }
 
 project 'test'
     kind 'ConsoleApp'
