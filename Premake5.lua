@@ -27,7 +27,7 @@ solution 'csv'
     ragelVars {
         OutputFileName = '../src/%(Filename).c',
         Outputs        = '%(OutputFileName)',
-        CodeStyle      = '6',
+        CodeStyle      = '1',
     }
 
     filter { 'action:vs*' }
@@ -65,7 +65,7 @@ project 'test'
         'test/test.c',
     }
 
-    configuration 'Debug'
+    filter { 'configurations:Debug' }
         debugdir '$(TargetDir)'
         debugargs 'header.csv >1'
 
