@@ -35,7 +35,8 @@ solution 'csv'
 
     filter { 'configurations:Debug' }
         defines { '_DEBUG' }
-        flags { 'Symbols' }
+        symbols 'On'
+        symbolspath '$(OutDir)$(TargetName).pdb'
         optimize 'Debug'
         targetsuffix '_d'
 
