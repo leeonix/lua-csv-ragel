@@ -18,6 +18,7 @@ solution 'csv'
     language 'C'
     defines { 'WIN32', '_WIN32', 'WINDOWS', '_WINDOWS' }
     flags { 'StaticRuntime', 'NoManifest', }
+    characterset ("MBCS")
 
     location 'build'
     targetdir 'bin'
